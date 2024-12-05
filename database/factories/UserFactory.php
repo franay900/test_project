@@ -29,6 +29,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('123456'),
             'remember_token' => Str::random(10),
+            'telegram_id' => fake()->randomNumber(5),
+            'phone' => fake()->phoneNumber(),
         ];
     }
 

@@ -18,7 +18,9 @@ class UserSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('123456'),
-            'is_admin' => true
+            'is_admin' => true,
+            'telegram_id' => '11111',
+            'phone' => '123456789',
         ]);
     }
 }

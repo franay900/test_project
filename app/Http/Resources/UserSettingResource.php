@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\UserSetting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CampaignResource extends JsonResource
+class UserSettingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +18,8 @@ class CampaignResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'status' => $this->status,
-            'creator_id' => $this->creator_id,
+            'description' => $this->description,
+            'value' => $this->pivot->value
 
         ];
     }

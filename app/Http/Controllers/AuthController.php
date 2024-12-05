@@ -1,56 +1,49 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
+
+
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-
-    public function login(Request $request)
+    public function __construct()
     {
-        $credentials = $request->only('email', 'password');
 
-        try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
-            }
+        # By default we are using here auth:api middleware
+        $this->middleware('auth:api', ['except' => ['login', 'refresh']]);
 
-            // Get the authenticated user.
-            $user = auth()->user();
-
-
-            return response()->json(compact('token'));
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
-        }
     }
-
 
     /**
      * Get a JWT via given credentials.
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+               return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
 
     /**
-     * Get the authenticated user.
+     * Get the authenticated User.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return UserResource
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        # Here we just get information about current user
+        return new UserResource(Auth::guard('api')->user());
     }
 
     /**
@@ -60,7 +53,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth()->logout(); # This is just logout function that will destroy access token of current user
 
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -72,6 +65,8 @@ class AuthController extends Controller
      */
     public function refresh()
     {
+        # When access token will be expired, we are going to generate a new one wit this function
+        # and return it here in response
         return $this->respondWithToken(auth()->refresh());
     }
 
@@ -84,10 +79,12 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        # This function is used to make JSON response with new
+        # access token of current user
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
 }

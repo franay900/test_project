@@ -5,82 +5,34 @@ const router = createRouter({
 
     routes: [
         {
-            path: '/access',
-            component: () => import('./views/Access.vue'),
-            name: 'access'
-        },
-
-        {
             path: '/',
             component: () => import('./views/Login.vue'),
             name: 'login'
         },
 
+
         {
-            path: '/user',
+            path: '/',
             component: () => import('./views/AppLayout.vue'),
             children: [
                 {
-                    path: '',
-                    component: () => import('./views/./user/Index.vue'),
-                    name: 'user.index'
+                    path: '/dashboard',
+                    component: () => import('./views/user/Dashboard.vue'),
+                    name: 'dashboard'
                 },
+
                 {
-                    path: 'create',
-                    component: () => import('./views/./user/Create.vue'),
-                    name: 'user.create'
-                }
+                    path: '/settings',
+                    component: () => import('./views/user/Settings.vue'),
+                    name: 'settings'
+                },
 
 
             ]
 
         },
 
-        {
-            path: '/campaign',
-            component: () => import('./views/AppLayout.vue'),
-            children: [
-                {
-                    path: '',
-                    component: () => import('./views/campaign/Index.vue'),
-                    name: 'campaign.index'
-                },
-                {
-                    path: 'create',
-                    component: () => import('./views/campaign/Create.vue'),
-                    name: 'campaign.create'
-                }
 
-
-            ]
-
-        },
-
-        {
-            path: '/ad',
-            component: () => import('./views/AppLayout.vue'),
-            children: [
-                {
-                    path: '',
-                    component: () => import('./views/ad/Index.vue'),
-                    name: 'ad.index'
-                },
-                {
-                    path: 'create',
-                    component: () => import('./views/ad/Create.vue'),
-                    name: 'ad.create'
-                },
-
-                {
-                    path: ':id/edit',
-                    component: () => import('./views/ad/Edit.vue'),
-                    name: 'ad.edit'
-                },
-
-
-            ]
-
-        }
     ]
 })
 

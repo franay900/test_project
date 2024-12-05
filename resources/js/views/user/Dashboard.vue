@@ -1,11 +1,11 @@
 <script>
 export default {
-    name: "Access"
+    name: "Dashboard"
 }
 </script>
 
 <template>
-    403 доступ запрещен
+Some dashboard
 </template>
 
 <style scoped>

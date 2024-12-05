@@ -3,7 +3,10 @@
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserSettingController;
+use App\Http\Controllers\VerificationCodeController;
 use App\Http\Middleware\AdminMiddlware;
 use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Http\Request;
@@ -21,11 +24,9 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
 });
 
-Route::resource('users', UserController::class)->middleware(AdminMiddlware::class);
 
-Route::resource('campaigns', CampaignController::class)->middleware(JwtMiddleware::class);
+Route::resource('settings', SettingController::class);
 
-Route::resource('ads', AdController::class);
+Route::resource('user_settings', UserSettingController::class);
 
-
-
+Route::post('verification_code', [VerificationCodeController::class, 'store']);

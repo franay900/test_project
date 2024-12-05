@@ -14,7 +14,7 @@ class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use SoftDeletes;
+
 
     /**
      * The attributes that are mass assignable.
@@ -37,11 +37,14 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    protected $with = ['settings'];
+
     /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
+
     protected function casts(): array
     {
         return [
@@ -63,9 +66,11 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function campaigns()
+
+    public function settings()
     {
-        return $this->hasMany(Campaign::class, 'creator_id', 'id');
+        return $this->belongsToMany(Setting::class, UserSetting::class)
+            ->withPivot('value');
     }
 
 
